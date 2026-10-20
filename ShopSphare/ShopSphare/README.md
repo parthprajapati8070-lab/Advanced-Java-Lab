@@ -1,37 +1,181 @@
-# ShopSphere E-Commerce Database Schema
+# 🛍️ ShopSphere — E-Commerce Web Application
 
-This repository contains the complete MySQL database schema for the **ShopSphere** e-commerce platform.
+ShopSphere is a Java-based e-commerce web application developed as an Advanced Java project. It provides an online shopping platform where users can explore products, manage their shopping carts, and interact with a MySQL-backed system.
 
-## File Overview
+## 📌 Project Overview
 
-- [`shopsphere.sql`](file:///home/sahil-sepat/Desktop/ShopSphare/shopsphere.sql): Complete SQL script defining database creation, 12 relational tables, constraints, indexes, and referential actions.
+ShopSphere demonstrates the development of a dynamic web application using Java web technologies, database connectivity, and a relational database.
 
----
+The project is designed to explore core concepts of Advanced Java, including Servlets, JDBC, database management, and web application deployment.
 
-## Tables Summary
+## ✨ Features
 
-| # | Table Name | Description | Key Relationships |
-|---|------------|-------------|-------------------|
-| 1 | `users` | User accounts, credentials, and authentication roles. Secure password hashing field (`VARCHAR(255)`). | Referenced by `addresses`, `cart`, `wishlist`, `orders`, `reviews`, `coupon_usage` |
-| 2 | `addresses` | Customer shipping and billing address records. | `user_id` &rarr; `users(user_id)` |
-| 3 | `categories` | Product categories supporting multi-level hierarchy via self-referencing foreign key. | `parent_id` &rarr; `categories(category_id)` |
-| 4 | `products` | Product inventory, pricing, SKUs, and availability statuses. | `category_id` &rarr; `categories(category_id)` |
-| 5 | `cart` | Active shopping cart items per user with uniqueness constraint on `(user_id, product_id)`. | `user_id` &rarr; `users`, `product_id` &rarr; `products` |
-| 6 | `wishlist` | Saved product lists per user with uniqueness constraint on `(user_id, product_id)`. | `user_id` &rarr; `users`, `product_id` &rarr; `products` |
-| 7 | `coupons` | Promotional vouchers with percentage or fixed discount rules and redemption thresholds. | Referenced by `orders`, `coupon_usage` |
-| 8 | `orders` | Customer checkout orders recording totals, discounts, shipping fees, tax, and order statuses. | `user_id` &rarr; `users`, `shipping_address_id` / `billing_address_id` &rarr; `addresses`, `coupon_id` &rarr; `coupons` |
-| 9 | `order_items` | Snapshot of purchased products, quantities, and historical unit prices per order. | `order_id` &rarr; `orders`, `product_id` &rarr; `products` |
-| 10 | `payments` | Transactions, payment methods, gateway responses, and payment statuses. | `order_id` &rarr; `orders` |
-| 11 | `reviews` | Customer ratings (1-5 stars) and reviews with verified purchase flags. | `product_id` &rarr; `products`, `user_id` &rarr; `users` |
-| 12 | `coupon_usage` | Audit log of applied coupons per user and order. | `coupon_id` &rarr; `coupons`, `user_id` &rarr; `users`, `order_id` &rarr; `orders` |
+* **Product Catalog** — Browse products and product categories.
+* **User Registration** — Register new user accounts.
+* **User Authentication** — Login functionality, if enabled in the current build.
+* **Shopping Cart** — Add and manage products in a cart, if supported by the current build.
+* **Database Integration** — Store and retrieve application data using MySQL.
+* **Product Management** — Organize products and categories.
+* **Order Management** — Order-related functionality, if implemented in the current build.
+* **Responsive Interface** — Web-based interface for accessing the application.
 
----
+> Note: Features depend on the implementation available in the current version of the project.
 
-## How to Run
+## 🛠️ Technologies Used
 
-Execute the SQL script in MySQL 8.0+:
+| Technology            | Purpose                                    |
+| --------------------- | ------------------------------------------ |
+| Java                  | Application logic                          |
+| Java Servlets         | Handle HTTP requests                       |
+| JDBC                  | Connect Java to the database               |
+| MySQL                 | Relational database                        |
+| Apache Tomcat 11      | Web application server                     |
+| Maven                 | Dependency management and project build    |
+| HTML, CSS, JavaScript | User interface                             |
+| JSP / JSTL            | Server-side views, where used              |
+| HikariCP              | Database connection pooling, if configured |
+| jBCrypt               | Password hashing, if configured            |
 
-```bash
-mysql -u <username> -p < shopsphere.sql
+## 📂 Project Structure
+
+```text
+ShopSphere/
+├── pom.xml
+├── shopsphere.sql
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── com/
+│       │       └── shopsphere/
+│       │           ├── dao/
+│       │           ├── servlet/
+│       │           └── util/
+│       ├── resources/
+│       └── webapp/
+└── target/
 ```
 
+*The exact structure may vary depending on the current source code. The `target/` directory is generated by Maven and generally should not be committed to GitHub.*
+
+## ⚙️ Prerequisites
+
+Install the following before running the application:
+
+* JDK 21 or a compatible version supported by your project
+* Apache Maven
+* MySQL Server and MySQL Workbench
+* Apache Tomcat 11
+* Visual Studio Code or another Java IDE
+
+## 🚀 Installation and Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone <YOUR_SHOPSPHERE_REPOSITORY_URL>
+```
+
+Alternatively, download the project and open its folder in VS Code.
+
+### 2. Create the Database
+
+1. Start MySQL Server.
+2. Open MySQL Workbench.
+3. Open the `shopsphere.sql` script included with the project.
+4. Review the SQL script before executing it.
+
+**Warning:** The script may drop and recreate existing tables. Back up any existing data before running it.
+
+### 3. Configure Database Credentials
+
+Configure the following environment variables for the Tomcat process:
+
+```text
+DB_URL=jdbc:mysql://localhost:3306/shopsphere?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+DB_USER=your_mysql_username
+DB_PASSWORD=your_mysql_password
+```
+
+Replace the example credentials with your own local MySQL credentials.
+
+**Security:** Never commit actual passwords, API keys, or other secrets to GitHub.
+
+### 4. Build the Project
+
+Open a terminal in the directory containing `pom.xml` and run:
+
+```bash
+mvn clean package
+```
+
+After a successful build, Maven generates the WAR file inside the `target/` directory.
+
+### 5. Deploy to Apache Tomcat
+
+Deploy the generated `shopsphere.war` file to the Tomcat `webapps/` directory.
+
+Start Tomcat and open:
+
+```text
+http://localhost:8080/shopsphere/
+```
+
+For the product catalog, try:
+
+```text
+http://localhost:8080/shopsphere/products
+```
+
+The exact URLs depend on the application's servlet mappings.
+
+## 🗄️ Database
+
+ShopSphere uses MySQL to manage application data.
+
+The database may contain tables for:
+
+* Users
+* Addresses
+* Categories
+* Products
+* Shopping carts
+* Wishlists
+* Orders and order items
+* Payments
+* Reviews
+* Coupons and coupon usage
+
+The actual schema is defined in the included SQL script.
+
+## 🎓 Learning Objectives
+
+This project demonstrates practical application of:
+
+* Java web application development
+* Servlet-based request handling
+* JDBC and relational database integration
+* Maven dependency management
+* WAR packaging and Tomcat deployment
+* Database-backed e-commerce workflows
+* Basic application architecture and modular code organization
+
+## 🔮 Future Improvements
+
+Potential improvements include:
+
+* Enhanced product search and filtering
+* Product image management
+* Improved form validation and error handling
+* Secure session management and authentication
+* Payment gateway integration
+* Order tracking
+* Automated unit and integration testing
+* Deployment to a cloud hosting platform
+
+## 👨‍💻 Author
+
+**Parth Prajapati**
+
+B.Tech — Computer Science and Engineering
+
+This project was developed for learning and academic purposes as part of Advanced Java coursework.
